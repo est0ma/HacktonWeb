@@ -11,20 +11,18 @@ function Login() {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      console.log(res.data);  // Ajoute un log pour vérifier la réponse
       if (res.data.success) {
-        navigate('/dashboard');
+        navigate('/nfc-confirmation', { state: { user: res.data.user } });
       } else {
         alert('Login failed. Please check your credentials and try again.');
       }
     } catch (error) {
       console.error('Login failed:', error);
-      alert('An error occurred during login. Please try again later.');
     }
   };
 
   return (
-    <div>
+    <div className="login">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>

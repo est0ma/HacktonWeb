@@ -44,7 +44,28 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
-    res.json({ success: true, message: 'Login successful' });
+    res.json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+router.post('/nfc-confirm', async (req, res) => {
+  const { email, nfcId } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid email or NFC token' });
+    }
+
+    if (user.nfcId !== nfcId) {
+      return res.status(401).json({ success: false, message: 'Invalid email or NFC token' });
+    }
+
+    res.json({ success: true, message: 'NFC confirmed' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Server error' });
